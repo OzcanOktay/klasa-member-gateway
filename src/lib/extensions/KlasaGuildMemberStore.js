@@ -1,4 +1,5 @@
 const { GuildMemberStore } = require('discord.js');
+const KlasaMember = require('./KlasaMember');
 
 /**
  * Adds our extensions to d.js's MemberStore
@@ -6,18 +7,16 @@ const { GuildMemberStore } = require('discord.js');
  */
 class KlasaGuildMemberStore extends GuildMemberStore {
 
-	async _fetchSingle(...args) {
-		const member = await super._fetchSingle(...args);
-		await member.settings.sync();
-		return member;
-	}
-
-	async _fetchMany(...args) {
-		const members = await super._fetchMany(...args);
-		await Promise.all(members.map(member => member.settings.sync()));
-		return members;
-	}
-
+    /**
+     * Fetches member and syncs settings
+     * @param  {...any} args d.js args for MemberStore#fetch
+     */
+    async fetch(...args) {
+        let members = [];
+        const member = await Promise.all(args.map((mbr) => super.fetch(mbr.id)));
+        member.map((mb) => members.push(new KlasaMember(mb)));
+        m.map(async(mbs) => await mbs.settings.sync())
+        return members;
+    }
 }
-
 module.exports = KlasaGuildMemberStore;
