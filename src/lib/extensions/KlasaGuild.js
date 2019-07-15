@@ -18,7 +18,7 @@ Structures.extend('Guild', Guild => {
 			 * @since 0.0.1
 			 * @type {KlasaGuildMemberStore}
 			 */
-			this.members = new KlasaGuildMemberStore(this, members);
+			this.members = new KlasaGuildMemberStore(this); //removed the `members` argument
 		}
 
 	}
